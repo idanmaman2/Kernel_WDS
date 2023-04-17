@@ -1,0 +1,15 @@
+$$ x64 code for dumpping the ssdt table ... 
+$$ in x64 - the address in the ssdt are relative to the address of the start which mean we need to you such formula : 
+$$ baseaddr + (routineOffset(int) / 16 )
+$$ ssdt struct : 
+$$ just an array of offsets - each 4B (sizeof(int)) 
+.block{
+    r? @$t3= *(unsigned int *) @@(nt!KiServiceLimit)  
+    r? @$t1= (int *) @@(nt!KeServiceDescriptorTableShadow) 
+    .for (r? @$t2=0; @$t2 < @$t3 ; r? @$t2=@$t2 + 1) {
+        r? @$t4 = @$t1[@$t2] >> 4
+        .printf "%d.)",@$t2
+        ln @$t4 +@$t1 
+    }
+
+}
